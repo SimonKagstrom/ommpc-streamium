@@ -33,6 +33,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <stdexcept>
 #include <algorithm>
 #include <dirent.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include <SDL_image.h>
 
 using namespace std;
@@ -175,7 +178,7 @@ void Popup::setOptionsText()
 				ename += dirent->d_name;
 				struct stat s;
 
-				if (stat(ename.c_str(), &s) < 0) {
+				if (::stat(ename.c_str(), &s) < 0) {
 					string msg = "error calling stat on ";
 					msg += ename;
 					throw runtime_error(msg.c_str());

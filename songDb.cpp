@@ -1,6 +1,7 @@
 #include "songDb.h"
 #include <stdexcept>
 #include <string.h>
+#include <stdio.h>
 
 using namespace std;
 
