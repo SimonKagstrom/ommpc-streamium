@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Run game
+cd /mnt/sd/mpd/
+./ommpc2x.gpe
+
+
+# Return to the menu screen
+cd /usr/gp2x/
+./gp2xmenu

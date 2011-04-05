@@ -1,0 +1,95 @@
+= Introduction =
+Welcome to ommpc2x!  For more detailed information visit http://code.google.com/p/ommpc/. Skip down to "Getting Started", if you're not a fan of reading.  Otherwise, here we go.  
+
+The first thing you might have noticed, is that the download archive is kind of large.  That's because there are actually three distinct programs included.  Ommpc2x is actually just One More Music Player _CLIENT_.  Thus there has to be a server involved somewhere.  That is Music Player Daemon, or mpd.  Mpd takes care of all sound playback aspects and ommpc2x iteracts with it through a library interface.  The third piece of the puzzle, is mpc(Music Player Client), a command line client for mpd.  This is used with some scripting to implement some features.
+
+== Features ==
+
+Playback of mp3, ogg, flac, aac, and some mod formats.
+Gapless playback of gapless formats(ogg, flac, aac?).
+Crossfading(not yet implemented)
+File browswer
+Playlists
+Bookmarks
+Skinnable
+Detachable client
+Keeps track of exact position in song when quitting the program
+
+= Details =
+
+I'm hoping ommpc will be fairly straightforward to use, but it's always helpful to have a resource to look at to answer and questions...  Plus there are a few caveats and issues that should be addressed.  So let's begin.
+
+
+*General*
+
+Music Player Daemon is a playlist based player with it's own internal database for file information.  Thus ommpc inherits these attributes.  Most of your interaction takes place in the playlist mode.  Thus that is where the player control is most functional.  The other modes are basically all helpers to get what you want in your playlist.  So let's examine these areas in the order you would be likely to access them from first installing the program.
+
+*Getting Started*
+
+The archive file for ommpc contains a directory structure that needs to remain intact for proper functionality.  It expects the "ommpc2x" directory to be placed int the root directory of the memory card(/mnt/sd).  If you place the directory elsewhere, you will need to edit applicable lines in ommc.conf, mpd.conf, and any supporting scripts, including ommpc2x.gpe which is itself actually a script.  Assuming you do choose the default location, you'll need to undertake the following step to get started.
+  1) Change the music_directory and playlist_directory lines in mpd.conf to point to where you're music and playlists are located
+  2) Change the albumArtRoot line in ommc.conf to that same music directory if you plan to use album art
+  3) Start up ommpc2x.  You will presented with a very blank slate.
+  4) Press the start button to access the Main Menu, choose Update Mpd Database.  Get prepared to wait, it will take quite a while... 
+  5) You're now ready to start using ommpc.
+
+http://ommpc.googlecode.com/svn/trunk/screenshots/mainmenu.jpg
+
+A quick word on Album Art.  I look in the directory the song is in for "AlbumArt.jpg", "AlbumArtSmall.jpg", "Folder.jpg", and then any other jpg.  Then I use the default.  Any other suggestions for filenames to look for?  Currently I'm only looking for a lower case jpg extension...
+
+
+*Browser Mode*
+
+http://ommpc.googlecode.com/svn/trunk/screenshots/browser.jpg
+
+The file browser currently shows a listing of your music as it appears in the directory structure of your disk.  In the future it will be expanded to sort by Artist/Ablum/etc in case your music isn't nicely organized.  'B' will go into a directory(or up if the directory is "..") and 'B' also inserts a selected song in the playlist at the currently playing location and starts playing that selected song.  Holding 'B' for a second will pause the currently playing song. 'X' will back up one directory, just was in the gp2x menu.  Holding 'X' will stop the currently playing song.  'A' appends the selected song to the end of the current playlist.
+
+*Playlist Browser Mode*
+
+http://ommpc.googlecode.com/svn/trunk/screenshots/plbrowser.jpg
+
+The Playlist Browser works similarly to the file browser, with the exception that the playlist structure is flat(there are no directories).  This is required by the mpd implementation.  'B' loads a playlist, while holding 'B' once again pauses.  You simply have to push 'X' here to stop the current song as there is no need for "back" functionality.  'A' appends the currently selected playlist to the active one, and holding 'A' will delete the currently selected playlist.  There are a couple of special items here also.  "New Playlist" will basically clear the active playlist so you can start fresh.  "Random Playlist" fills the active playlist with 65 random songs.  To add all files in the database to the current playlist, push 'START' and choose "Add All Files in Database".
+
+*Bookmark Browser Mode*
+
+http://ommpc.googlecode.com/svn/trunk/screenshots/bookmarks.jpg
+
+The browser for bookmarks controls very much like that for playlists.  You have an option to Save a Bookmark, which will bookmark the current position of the currently playing file.  'B' loads a saved bookmark and of course carries out the save.  Holding 'B' still pauses.  'X' stops and holding 'A' deletes the current bookmark.
+
+*Playlist Mode*
+
+http://ommpc.googlecode.com/svn/trunk/screenshots/playlist.jpg
+
+Finally, we come to the playlist.  Nothing really out of the ordinary here.  'B' plays the current song and pauses if still on the current song.  Holding 'B' will pause no matter what song is selected.  'X' stops.  Holding 'A' deletes the song from the playlist.  Pressing 'Y' once initiates a move and once you select a new position, pressing 'Y' again finishes the move.  The 'R' trigger is next and holding it will fast forward.  The 'L' trigger is previous and rewind.  You definitely be listening to music by this point.  
+
+*Global Options*
+
+http://ommpc.googlecode.com/svn/trunk/screenshots/mainmenu.jpg
+http://ommpc.googlecode.com/svn/trunk/screenshots/options.jpg
+
+You can access the Main Menu from any screen by pressing the 'Start' button.  Holding the 'Start' button for 4-5 seconds will turn off the backlight and also restore it.  The 'Select' button toggles the different modes.  Holding the 'Select' button, toggles views within the mode, if any.
+
+Now, returning to the Main Menu.  From within that menu you can choose a few different options with the 'B' button.  'X' will close the menu.  
+ * Return to player - pretty self explanatory.
+ * Save Playlist - Just a shortcut to save a playlist
+ * Create Bookmark - Same for bookmarks
+ * Launch Program - Launch predefined script with music in the background(details below)
+ * Detach Client - Kill ommpc leaving mpd playing music in the background(details below)
+ * Update Mpd Database - Call when every you add/delete new music
+ * Player Options - Access options menu
+ * Exit - I'll let you use your imagination
+
+One submenu you can get to is the options menu.  From there you can similarly navigate to an item.  One on a selected option use the joystick left and right to change/toggle options.  You can set the cpu from 75-280 Mhz. That's too low to be useful and too high to be needed.  Most music seems to play fine at 100Mhz...even down to 85Mhz on most of my ogg collection when not using the software volume feature.  If you plan to only play in the background, you can get away with 75Mhz, you will just get a bit of skipping until you get the screen off.  The only caveat is slow buffering.  This isn't a problem listening to a playlist, but if you select and hit next/prev alot, it can get bothersome.  Speed it up it it bothers you.  You can also choose whether to display Album art or not, the skin to use, and if you wish to use the Software volume.  Any of these options require a restart to see the change. Software volume makes listening on an F200 with headphones more enjoyable, but takes a little extra cpu...usually only 10Mhz extra Mhz is needed for smooth playback versus hardware.  Again, 100Mhz should be fine for most files.
+
+*Launching Programs*
+
+Now a few words about launching programs and detaching the client.  It does not work at all perfectly.  The main problem occurs when the launched program changes the cpu clock while mpd is currently playing.  The play speed gets messed up and volume spikes.  I'm also not sure how other programs outputing sound simultaniously will work out.  So the best way to use this is if the launched program has command line options not to change the current clock speed or output sound.  Then a simple script can be used and will work probably 90% of the time.  Similarly just detaching the client will work most of the time.  Occasionally it will cause mpd to hang and you won't be able to restart ommpc until restarting the gp2x.  
+
+Now if the program you want to use doesn't have those types of options, there are a couple things I've tried to workaround it.  There is a more complex sample script that attempts to pause the music and wait for a bit while the program is launching before restarting.  A set volume setting is needed at the end also since the gp2x like it's mixer at 67% volume for some reason.  This solution also fails occasionally, but it's better than nothing...
+
+Now the final bit of subterfuge in the launch programs scripting it getting back to ommpc2x when we're done.  We can't use a static autorun.gpu like a third party launcher, because, well, we do want to exit sometime.  So I've put some scripting in place that will put an autorun file in place to get us back and then remove it once we've returned back to ommpc2x.  It will of course back up your current autorun script and put it back in place if you are using one.  It's kludgy, but it works for the most part.  The only issue being if the gp2x dies while you're running a program launched from ommc2x.  If that happens your autorun files will be out of sync an you'll have to fix them manually. If all of this seesm terribly unappealing to you, simply don't use the Launch Program feature.
+
+*Other Issues*
+
+The only other issues that I can't quite figure out are that occasionally while interacting with ommpc2x the sound will become "crackly" or volume becomes muted. A quick pause/play and/or changing the volume usually rectifies the situation.  I've never had it happen just playing through the playlist, only when I've started a song manually with select/next/prev or during fast forward/rewind.
+

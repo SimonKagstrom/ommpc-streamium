@@ -1,0 +1,216 @@
+#-------------------------------------------------------------------------------
+# Simple Makefile
+#
+#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+# Be sure to use the cxx compiler
+#-------------------------------------------------------------------------------
+CC = arm-open2x-linux-gcc
+CXX = arm-open2x-linux-g++
+STRIP = arm-open2x-linux-strip
+SDL_BASE = $(OPEN2X)/bin/
+
+#-------------------------------------------------------------------------------
+# Desired optimization level
+#-------------------------------------------------------------------------------
+O_FLAG = -Wall -Werror
+#O_FLAG = -O1
+OPTIMIZATION_FLAG = -O2
+
+#-------------------------------------------------------------------------------
+# The directories to look for include files and libraries
+#-------------------------------------------------------------------------------
+INCDIR = -I. -I/opt/open2x/gcc-4.1.1-glibc-2.3.6/include/SDL
+LIB = -L. -L/opt/open2x/gcc-4.1.1-glibc-2.3.6/lib
+
+#-------------------------------------------------------------------------------
+# Compiler flags
+#-------------------------------------------------------------------------------
+CXXFLAGS      = `$(SDL_BASE)sdl-config --cflags` $(OPTIMIZATION_FLAG) $(INCDIR) $(LIB) -DGP2X
+LDFLAGS = -static
+#-------------------------------------------------------------------------------
+# The .cpp files used to compile the client
+#-------------------------------------------------------------------------------
+.SUFFIXES: .cpp .c
+
+.c.o:
+	$(CC) $(CXXFLAGS) -c $<
+.c:
+	$(CC) $(CXXFLAGS) $< -o $@
+	
+.cpp.o:
+	$(CXX) $(CXXFLAGS) -c $<
+
+.cpp:
+	$(CXX) $(CXXFLAGS) $< -o $@
+
+SRC     = plBrowser.cpp browser.cpp playlist.cpp main.cpp config.cpp nowPlaying.cpp statsBar.cpp commandFactory.cpp popup.cpp scroller.cpp timestamp.cpp helpBar.cpp albumArt.cpp threadFunctions.cpp bookmarks.cpp gp2xregs.cpp overlay.cpp songDb.cpp keyboard.cpp button.cpp volButton.cpp buttonManager.cpp seekButton.cpp rndButton.cpp rptButton.cpp rndRptButton.cpp menu.cpp menuButton.cpp fullPlaying.cpp artButton.cpp settings.cpp
+
+
+OBJ = $(SRC:.cpp=.o) libmpdclient.o
+#-------------------------------------------------------------------------------
+# Libraries being linked with the application
+#-------------------------------------------------------------------------------
+LIBS = -lpthread -lSDLmain -lSDL_ttf -lSDL_gfx -lSDL_image -lSDL  -lfreetype -lpng -ljpeg -lz libsqlite3.a -ldl
+
+#-------------------------------------------------------------------------------
+# Target for creating simple client
+#-------------------------------------------------------------------------------
+ommpc2x: $(OBJ)
+	@echo $(OBJ)
+	@echo $(SRC)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJ) $(LDFLAGS) \
+		$(SYSLIBS) $(LIBS)
+
+	$(STRIP) ommpc2x
+	@echo "SUCCESS"
+
+watchdog: 
+	$(CXX) $(CXXFLAGS) -c watchdog.cpp
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o watchdog watchdog.o config.o libmpdclient.o
+#-------------------------------------------------------------------------------
+# Target for "make all"
+#-------------------------------------------------------------------------------
+all:
+	make clean
+	make ommp2x 
+
+
+#-------------------------------------------------------------------------------
+# Target for "make clean"
+#-------------------------------------------------------------------------------
+clean:
+	rm -rf core *.o ommp2x *~ *.*~ .*~ \#* .in* tca.* *vti* *.idl cxx_repository
+
+
+#---
+#Dependecies
+#---
+depend:
+	makedepend $(CXXFLAGS) -Y $(SRC)
+# DO NOT DELETE
+
+plBrowser.o: plBrowser.h /usr/include/SDL/SDL.h /usr/include/SDL/SDL_main.h
+plBrowser.o: /usr/include/SDL/SDL_stdinc.h /usr/include/SDL/SDL_config.h
+plBrowser.o: /usr/include/SDL/SDL_platform.h /usr/include/SDL/begin_code.h
+plBrowser.o: /usr/include/SDL/close_code.h /usr/include/SDL/SDL_audio.h
+plBrowser.o: /usr/include/SDL/SDL_error.h /usr/include/SDL/SDL_endian.h
+plBrowser.o: /usr/include/SDL/SDL_mutex.h /usr/include/SDL/SDL_thread.h
+plBrowser.o: /usr/include/SDL/SDL_rwops.h /usr/include/SDL/SDL_cdrom.h
+plBrowser.o: /usr/include/SDL/SDL_cpuinfo.h /usr/include/SDL/SDL_events.h
+plBrowser.o: /usr/include/SDL/SDL_active.h /usr/include/SDL/SDL_keyboard.h
+plBrowser.o: /usr/include/SDL/SDL_keysym.h /usr/include/SDL/SDL_mouse.h
+plBrowser.o: /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h
+plBrowser.o: /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h
+plBrowser.o: /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h
+plBrowser.o: /usr/include/SDL/SDL_ttf.h libmpdclient.h scroller.h
+plBrowser.o: threadParms.h commandFactory.h playlist.h config.h
+browser.o: browser.h /usr/include/SDL/SDL.h /usr/include/SDL/SDL_main.h
+browser.o: /usr/include/SDL/SDL_stdinc.h /usr/include/SDL/SDL_config.h
+browser.o: /usr/include/SDL/SDL_platform.h /usr/include/SDL/begin_code.h
+browser.o: /usr/include/SDL/close_code.h /usr/include/SDL/SDL_audio.h
+browser.o: /usr/include/SDL/SDL_error.h /usr/include/SDL/SDL_endian.h
+browser.o: /usr/include/SDL/SDL_mutex.h /usr/include/SDL/SDL_thread.h
+browser.o: /usr/include/SDL/SDL_rwops.h /usr/include/SDL/SDL_cdrom.h
+browser.o: /usr/include/SDL/SDL_cpuinfo.h /usr/include/SDL/SDL_events.h
+browser.o: /usr/include/SDL/SDL_active.h /usr/include/SDL/SDL_keyboard.h
+browser.o: /usr/include/SDL/SDL_keysym.h /usr/include/SDL/SDL_mouse.h
+browser.o: /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h
+browser.o: /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h
+browser.o: /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h
+browser.o: /usr/include/SDL/SDL_ttf.h libmpdclient.h scroller.h threadParms.h
+browser.o: commandFactory.h
+playlist.o: playlist.h /usr/include/SDL/SDL.h /usr/include/SDL/SDL_main.h
+playlist.o: /usr/include/SDL/SDL_stdinc.h /usr/include/SDL/SDL_config.h
+playlist.o: /usr/include/SDL/SDL_platform.h /usr/include/SDL/begin_code.h
+playlist.o: /usr/include/SDL/close_code.h /usr/include/SDL/SDL_audio.h
+playlist.o: /usr/include/SDL/SDL_error.h /usr/include/SDL/SDL_endian.h
+playlist.o: /usr/include/SDL/SDL_mutex.h /usr/include/SDL/SDL_thread.h
+playlist.o: /usr/include/SDL/SDL_rwops.h /usr/include/SDL/SDL_cdrom.h
+playlist.o: /usr/include/SDL/SDL_cpuinfo.h /usr/include/SDL/SDL_events.h
+playlist.o: /usr/include/SDL/SDL_active.h /usr/include/SDL/SDL_keyboard.h
+playlist.o: /usr/include/SDL/SDL_keysym.h /usr/include/SDL/SDL_mouse.h
+playlist.o: /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h
+playlist.o: /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h
+playlist.o: /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h
+playlist.o: /usr/include/SDL/SDL_ttf.h config.h libmpdclient.h scroller.h
+playlist.o: threadParms.h commandFactory.h popup.h
+main.o: /usr/include/SDL/SDL.h /usr/include/SDL/SDL_main.h
+main.o: /usr/include/SDL/SDL_stdinc.h /usr/include/SDL/SDL_config.h
+main.o: /usr/include/SDL/SDL_platform.h /usr/include/SDL/begin_code.h
+main.o: /usr/include/SDL/close_code.h /usr/include/SDL/SDL_audio.h
+main.o: /usr/include/SDL/SDL_error.h /usr/include/SDL/SDL_endian.h
+main.o: /usr/include/SDL/SDL_mutex.h /usr/include/SDL/SDL_thread.h
+main.o: /usr/include/SDL/SDL_rwops.h /usr/include/SDL/SDL_cdrom.h
+main.o: /usr/include/SDL/SDL_cpuinfo.h /usr/include/SDL/SDL_events.h
+main.o: /usr/include/SDL/SDL_active.h /usr/include/SDL/SDL_keyboard.h
+main.o: /usr/include/SDL/SDL_keysym.h /usr/include/SDL/SDL_mouse.h
+main.o: /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h
+main.o: /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h
+main.o: /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h
+main.o: /usr/include/SDL/SDL_ttf.h config.h browser.h libmpdclient.h
+main.o: scroller.h plBrowser.h playlist.h nowPlaying.h threadFunctions.h
+main.o: threadParms.h commandFactory.h statsBar.h timer.h popup.h
+config.o: config.h
+nowPlaying.o: nowPlaying.h /usr/include/SDL/SDL.h /usr/include/SDL/SDL_main.h
+nowPlaying.o: /usr/include/SDL/SDL_stdinc.h /usr/include/SDL/SDL_config.h
+nowPlaying.o: /usr/include/SDL/SDL_platform.h /usr/include/SDL/begin_code.h
+nowPlaying.o: /usr/include/SDL/close_code.h /usr/include/SDL/SDL_audio.h
+nowPlaying.o: /usr/include/SDL/SDL_error.h /usr/include/SDL/SDL_endian.h
+nowPlaying.o: /usr/include/SDL/SDL_mutex.h /usr/include/SDL/SDL_thread.h
+nowPlaying.o: /usr/include/SDL/SDL_rwops.h /usr/include/SDL/SDL_cdrom.h
+nowPlaying.o: /usr/include/SDL/SDL_cpuinfo.h /usr/include/SDL/SDL_events.h
+nowPlaying.o: /usr/include/SDL/SDL_active.h /usr/include/SDL/SDL_keyboard.h
+nowPlaying.o: /usr/include/SDL/SDL_keysym.h /usr/include/SDL/SDL_mouse.h
+nowPlaying.o: /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h
+nowPlaying.o: /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h
+nowPlaying.o: /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h
+nowPlaying.o: /usr/include/SDL/SDL_ttf.h libmpdclient.h config.h playlist.h
+nowPlaying.o: scroller.h threadParms.h
+statsBar.o: statsBar.h /usr/include/SDL/SDL.h /usr/include/SDL/SDL_main.h
+statsBar.o: /usr/include/SDL/SDL_stdinc.h /usr/include/SDL/SDL_config.h
+statsBar.o: /usr/include/SDL/SDL_platform.h /usr/include/SDL/begin_code.h
+statsBar.o: /usr/include/SDL/close_code.h /usr/include/SDL/SDL_audio.h
+statsBar.o: /usr/include/SDL/SDL_error.h /usr/include/SDL/SDL_endian.h
+statsBar.o: /usr/include/SDL/SDL_mutex.h /usr/include/SDL/SDL_thread.h
+statsBar.o: /usr/include/SDL/SDL_rwops.h /usr/include/SDL/SDL_cdrom.h
+statsBar.o: /usr/include/SDL/SDL_cpuinfo.h /usr/include/SDL/SDL_events.h
+statsBar.o: /usr/include/SDL/SDL_active.h /usr/include/SDL/SDL_keyboard.h
+statsBar.o: /usr/include/SDL/SDL_keysym.h /usr/include/SDL/SDL_mouse.h
+statsBar.o: /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h
+statsBar.o: /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h
+statsBar.o: /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h
+statsBar.o: /usr/include/SDL/SDL_ttf.h libmpdclient.h config.h playlist.h
+statsBar.o: scroller.h threadParms.h
+commandFactory.o: commandFactory.h /usr/include/SDL/SDL.h
+commandFactory.o: /usr/include/SDL/SDL_main.h /usr/include/SDL/SDL_stdinc.h
+commandFactory.o: /usr/include/SDL/SDL_config.h
+commandFactory.o: /usr/include/SDL/SDL_platform.h
+commandFactory.o: /usr/include/SDL/begin_code.h /usr/include/SDL/close_code.h
+commandFactory.o: /usr/include/SDL/SDL_audio.h /usr/include/SDL/SDL_error.h
+commandFactory.o: /usr/include/SDL/SDL_endian.h /usr/include/SDL/SDL_mutex.h
+commandFactory.o: /usr/include/SDL/SDL_thread.h /usr/include/SDL/SDL_rwops.h
+commandFactory.o: /usr/include/SDL/SDL_cdrom.h /usr/include/SDL/SDL_cpuinfo.h
+commandFactory.o: /usr/include/SDL/SDL_events.h /usr/include/SDL/SDL_active.h
+commandFactory.o: /usr/include/SDL/SDL_keyboard.h
+commandFactory.o: /usr/include/SDL/SDL_keysym.h /usr/include/SDL/SDL_mouse.h
+commandFactory.o: /usr/include/SDL/SDL_video.h
+commandFactory.o: /usr/include/SDL/SDL_joystick.h /usr/include/SDL/SDL_quit.h
+commandFactory.o: /usr/include/SDL/SDL_loadso.h /usr/include/SDL/SDL_timer.h
+commandFactory.o: /usr/include/SDL/SDL_version.h
+popup.o: popup.h /usr/include/SDL/SDL.h /usr/include/SDL/SDL_main.h
+popup.o: /usr/include/SDL/SDL_stdinc.h /usr/include/SDL/SDL_config.h
+popup.o: /usr/include/SDL/SDL_platform.h /usr/include/SDL/begin_code.h
+popup.o: /usr/include/SDL/close_code.h /usr/include/SDL/SDL_audio.h
+popup.o: /usr/include/SDL/SDL_error.h /usr/include/SDL/SDL_endian.h
+popup.o: /usr/include/SDL/SDL_mutex.h /usr/include/SDL/SDL_thread.h
+popup.o: /usr/include/SDL/SDL_rwops.h /usr/include/SDL/SDL_cdrom.h
+popup.o: /usr/include/SDL/SDL_cpuinfo.h /usr/include/SDL/SDL_events.h
+popup.o: /usr/include/SDL/SDL_active.h /usr/include/SDL/SDL_keyboard.h
+popup.o: /usr/include/SDL/SDL_keysym.h /usr/include/SDL/SDL_mouse.h
+popup.o: /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h
+popup.o: /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h
+popup.o: /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h
+popup.o: /usr/include/SDL/SDL_ttf.h libmpdclient.h config.h playlist.h
+popup.o: scroller.h threadParms.h commandFactory.h
+watchdog.o: watchdog.cpp
